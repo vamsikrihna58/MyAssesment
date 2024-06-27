@@ -55,10 +55,12 @@ public class RepositoryStrucutrImplementation implements RepositoryStrucutre {
 
 	@Override
 	public ResponseStrucutre<List<DoctorEntity>> suggestDoctors(int id) {
+		ResponseStrucutre<List<DoctorEntity>> rf= new ResponseStrucutre<List<DoctorEntity>>();
 		Optional<PatientEntity> fi = pr.findById(id);
+		if(fi.isPresent()){
 		String sy= fi.get().getSymptom().toLowerCase();
 		String city=fi.get().getCity().toUpperCase();
-		ResponseStrucutre<List<DoctorEntity>> rf= new ResponseStrucutre<List<DoctorEntity>>();
+		
 		if((city.equals("DELHI") || city.equals("NOIDA") || city.equals("FARIDABAD"))){
  		   if(sy.equals("arthritis") ||sy.equals("back pain")|| sy.equals("tissue injuries") ) {
  	          rf.setData(dr.findBySpeciality("ORTHOPAEDIC"));
@@ -94,10 +96,7 @@ public class RepositoryStrucutrImplementation implements RepositoryStrucutre {
  			   rf.setStatusCode(HttpStatus.NOT_FOUND.value());
  			   return rf;
  			   
- 		   }
- 		   
- 		   
- 		   
+ 		   }  
  	   }
  	   else {
  		   rf.setStatusCode(HttpStatus.NOT_FOUND.value());
@@ -106,8 +105,13 @@ public class RepositoryStrucutrImplementation implements RepositoryStrucutre {
  	   }
  	     
 		
+	}
+	else{
+		  rf.setStatusCode(HttpStatus.NOT_FOUND.value());
+	          rf.setMessage("the id you entered is not available");
+	 	   return rf;
 		
-	
+	}
 		
 
 	}
